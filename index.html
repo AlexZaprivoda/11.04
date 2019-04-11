@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+</head>
+<style>
+    body {
+        background-color: lightgreen;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    #main_block {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    h2 {
+        height: 200px;
+    }
+
+    #block1 {
+        background-color: green;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #block2 {
+        background-color: red;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+<body>
+    <div id="main_block">
+        <h2 id="block1" style="width:50%;">
+            <span id="val1">50</span>
+        </h2>
+        <h2 id="block2" style="width:50%;">
+            <span id="val2">50</span>
+        </h2>
+    </div>
+
+    <script defer>
+        let healthMy = 50, healthEnemy = 50;
+
+        block2.addEventListener("click", () => {
+            healthMy++;
+            healthEnemy--;
+            val1.innerHTML = healthMy;
+            val2.innerHTML = healthEnemy;
+            block1.style.width = `${healthMy}%`;
+            block2.style.width = `${healthEnemy}%`;
+            socket.emit("hit", null);
+
+            if (healthMy == 100 || healthEnemy == 100) {
+                alert(`Game Over.\n ${healthMy == 100 ? "Win" : "Lose"}`)
+            }
+        });
+
+
+        var socket = io.connect(`http://${location.href}`);
+        socket.on("passHit", function () {
+            // console.log(data);
+
+            healthEnemy++;
+            healthMy--;
+            val1.innerHTML = healthMy;
+            val2.innerHTML = healthEnemy;
+            block1.style.width = `${healthMy}%`;
+            block2.style.width = `${healthEnemy}%`;
+            if (healthMy == 100 || healthEnemy == 100) {
+                alert(`Game Over.\n ${healthMy == 100 ? "Win" : "Lose"}`)
+            }
+        });
+        // socket.on('news', function (data) {
+        //     console.log(data);
+        //     socket.emit('my other event', { my: 'data' });
+        // });
+    </script>
+</body>
+
+</html>
